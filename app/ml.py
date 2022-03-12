@@ -1,6 +1,6 @@
 import json
 import numpy as np
-
+import pickle
 from typing import Optional, List
 from pathlib import Path
 from dataclasses import dataclass # pip install dataclasses
@@ -26,13 +26,16 @@ class AIModel:
             self.model = load_model(self.model_path) 
         if self.tokenizer_path:
             if self.tokenizer_path.exists():
-                if self.tokenizer_path.name.endswith("json"): 
-                    tokenizer_text = self.tokenizer_path.read_text()
-                    self.tokenizer = tokenizer_from_json(tokenizer_text)
+                if self.tokenizer_path.name.endswith("json"):
+                    with open(str(self.tokenizer_path)) as f:
+                        data = json.load(f)
+                    self.tokenizer = tokenizer_from_json(data)
+        
         if self.metadata_path:
             if self.metadata_path.exists():
-                if self.metadata_path.name.endswith("json"): 
-                    self.metadata = json.loads(self.metadata_path.read_text())
+                if self.metadata_path.name.endswith("pkl"):
+                    with open(str(self.metadata_path), 'rb') as f:
+                         self.metadata = pickle.load(f)
 
     
     def get_model(self):
@@ -56,12 +59,12 @@ class AIModel:
         return sequences
 
     def get_input_from_sequences(self, sequences):
-        maxlen = self.get_metadata().get('max_sequence') or 280
+        maxlen = self.get_metadata().get('max_seq_length') or 300
         x_input = pad_sequences(sequences, maxlen=maxlen)
         return x_input
 
     def get_label_legend_inverted(self):
-        legend = self.get_metadata().get('labels_legend_inverted') or {}
+        legend = self.get_metadata().get('label_legend_inverted') or {}
         if len(legend.keys()) != 2:
             raise Exception("You legend is incorrect")
         return legend

@@ -23,12 +23,12 @@ BASE_DIR = pathlib.Path(__file__).resolve().parent
 MODEL_DIR = BASE_DIR.parent / "models"
 SMS_SPAM_MODEL_DIR = MODEL_DIR / "spam-sms"
 MODEL_PATH = SMS_SPAM_MODEL_DIR / "spam-model.h5"
-TOKENIZER_PATH = SMS_SPAM_MODEL_DIR / "spam-classifer-tokenizer.json"
-METADATA_PATH = SMS_SPAM_MODEL_DIR / "spam-classifer-metadata.json"
+TOKENIZER_PATH = SMS_SPAM_MODEL_DIR / "spam-tokenizer.json"
+METADATA_PATH = SMS_SPAM_MODEL_DIR / "spam-metadata.pkl"
 
 AI_MODEL = None
 DB_SESSION = None
-SMSInference = models.SMSInference
+SMSInference = models.spamdb
 
 @app.on_event("startup")
 def on_startup():
@@ -60,7 +60,7 @@ def create_inference(query:schema.Query):
 @app.get("/inferences") # /?q=this is awesome
 def list_inference():
     q = SMSInference.objects.all()
-    print(q)
+    # print(q)
     return list(q)
 
 
@@ -70,11 +70,8 @@ def read_inference(my_uuid):
     return obj
 
 
-
-def fetch_rows(
-        stmt:SimpleStatement, 
-        fetch_size:int = 25, 
-        session=None):
+def fetch_rows(stmt:SimpleStatement, fetch_size:int = 25, session=None):
+    
     stmt.fetch_size = fetch_size
     result_set = session.execute(stmt)
     has_pages = result_set.has_more_pages
@@ -89,7 +86,7 @@ def fetch_rows(
 @app.get("/dataset") # /?q=this is awesome
 def export_inferences():
     global DB_SESSION
-    cql_query = "SELECT * FROM spam_inferences.smsinference LIMIT 10000"
+    cql_query = "SELECT * FROM spam_data.spamdb LIMIT 10000"
     statement = SimpleStatement(cql_query)
     # rows = DB_SESSION.execute(cql_query)
     return StreamingResponse(fetch_rows(statement, 25, DB_SESSION))

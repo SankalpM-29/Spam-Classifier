@@ -1,20 +1,14 @@
-FROM codingforentrepreneurs/python:3.9-webapp-cassandra
+FROM ubuntu:20.04
 
-COPY .env /app/.env
-COPY ./app /app/app
+RUN apt-get update && apt-get install -y \
+git \
+curl \
+ca-certificates \
+python3 \
+python3-pip
+
+RUN mkdir /app
 COPY ./requirements.txt /app/requirements.txt
-COPY ./entrypoint.sh /app/entrypoint.sh
-COPY ./pipelines /app/pipelines/
-
 WORKDIR /app
 
-RUN chmod +x entrypoint.sh
-
-
-RUN python3 -m venv /opt/venv && /opt/venv/bin/python -m pip install -r requirements.txt
-
-RUN /opt/venv/bin/python -m pypyr /app/pipelines/ai-model-download
-
-RUN /opt/venv/bin/python -m pypyr /app/pipelines/decrypt
-
-CMD [ "./entrypoint.sh" ]
+RUN python3 -m pip install -r requirements.txt

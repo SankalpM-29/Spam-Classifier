@@ -3,6 +3,7 @@ app/decrypted/
 models/
 *.pkl
 datasets/exports/*.json
+datasets/exports/*.h5
 .DS_Store
 datasets/spam-classifier/
 datasets/zips/
@@ -10,6 +11,8 @@ bin/
 etc/
 include/
 share/
+lib64
+.vscode/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
