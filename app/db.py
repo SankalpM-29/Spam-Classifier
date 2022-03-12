@@ -5,7 +5,7 @@ from cassandra.auth import PlainTextAuthProvider
 from cassandra.cqlengine import connection
 
 BASE_DIR = pathlib.Path(__file__).resolve().parent
-SOURCE_DIR = BASE_DIR / 'encrypted'
+SOURCE_DIR = BASE_DIR / 'ignored'
 if not SOURCE_DIR.exists():
     SOURCE_DIR = BASE_DIR / 'decrypted'
 
