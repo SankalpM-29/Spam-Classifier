@@ -12,6 +12,7 @@ def generate_key():
 
 
 def encrypt_dir(input_dir, output_dir):
+    global ENCRYPTION_KEY
     key = ENCRYPTION_KEY
     if not key:
         raise Exception("ENCRYPTION_KEY is not found")
@@ -28,6 +29,7 @@ def encrypt_dir(input_dir, output_dir):
 
 
 def decrypt_dir(input_dir, output_dir):
+    global ENCRYPTION_KEY
     key = ENCRYPTION_KEY
     if not key:
         raise Exception("ENCRYPTION_KEY is not found")
