@@ -16,6 +16,8 @@ COPY ./pipelines /spam/pipelines/
 
 WORKDIR /spam
 
+RUN chmod +x entrypoint.sh
+
 RUN python3 -m pip install -r requirements.txt
 
 RUN python3 -m pypyr /spam/pipelines/decrypt
