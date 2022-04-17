@@ -5,3 +5,7 @@
 #### Prediction for an Input
 
 <img src = "datasets/make_prediction.png"/>
+
+#### Database schema for AstraDB
+
+<img src = "datasets/astradb_schema.png"/>
